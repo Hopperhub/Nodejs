@@ -1,6 +1,6 @@
 # nodejs_server
 
-nodejs 搭建后台服务
+原生 nodejs 搭建后台服务
 
 ## 实现
 
@@ -120,5 +120,6 @@ nodejs 搭建后台服务
 
 6.  接口管理（Router）路由 -> 需要自己实现，因为原生没有
 
-- `EventEmitter` 事件队列
+    - `EventEmitter` 事件队列
 
+    - node 模块单例：不管引用多少次，只要是同一模块，就是相等的，和 new 构造函数不同
