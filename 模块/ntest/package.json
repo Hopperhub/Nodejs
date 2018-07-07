@@ -1,0 +1,17 @@
+{
+  "name": "ntest",
+  "version": "0.0.1",
+  "description": "this is my test package",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "create",
+    "node",
+    "package",
+    "test"
+  ],
+  "author": "hopper",
+  "license": "ISC"
+}

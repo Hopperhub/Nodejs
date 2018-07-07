@@ -1,0 +1,21 @@
+{
+  "name": "mymodule",
+  "version": "0.0.1",
+  "description": "模块测试",
+  "main": "index.js",
+  "dependencies": {
+    "nmine": "^0.0.1",
+    "ntest": "^0.0.1"
+  },
+  "devDependencies": {
+    "nmine": "0.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "模块测试"
+  ],
+  "author": "hopper",
+  "license": "ISC"
+}

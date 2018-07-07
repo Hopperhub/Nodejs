@@ -1,0 +1,26 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "nodejs package",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hopperhub/Nodejs.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "hopper",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hopperhub/Nodejs/issues"
+  },
+  "homepage": "https://github.com/Hopperhub/Nodejs#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "mysql": "^2.15.0"
+  }
+}

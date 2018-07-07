@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Page Title</title>
+    <script src="ajax.js" charset="utf-8"></script>
+    <script>
+        window.onload = function () {
+            // var act = document.getElementById('act');
+            var user = document.getElementById('user');
+            var password = document.getElementById('password');
+
+            var loginBtn = document.getElementById('login');
+            var registerBtn = document.getElementById('register');
+
+            loginBtn.onclick = function () {
+                ajax({
+                    url: '/user',
+                    type: 'get',
+                    data: {
+                        act: 'login',
+                        user: user.value,
+                        password: password.value
+                    },
+                    success: function (data) {
+                        var d = JSON.parse(data);
+                        alert(d.msg);
+                    },
+                    error: function (err) {
+                        console.log('error', err);
+                    }
+                });
+            };
+
+            registerBtn.onclick = function () {
+                ajax({
+                    url: '/user',
+                    type: 'get',
+                    data: {
+                        act: 'register',
+                        user: user.value,
+                        password: password.value
+                    },
+                    success: function (data) {
+                        var d = JSON.parse(data);
+                        alert(d.msg);
+                    },
+                    error: function (err) {
+                        console.log('error', err);
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div>
+        <input type="button" id="login" value="登录">
+        <input type="button" id="register" value="注册">
+    </div>
+    <!-- action:
+    <input type="text" id="act">
+    <br/>  -->
+    user:
+    <input type="text" id="user">
+    <br/> password:
+    <input type="password" id="password">
+</body>
+
+</html>

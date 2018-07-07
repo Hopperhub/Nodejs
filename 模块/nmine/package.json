@@ -1,0 +1,14 @@
+{
+  "name": "nmine",
+  "version": "0.0.2",
+  "description": "publish test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "publish"
+  ],
+  "author": "hopper",
+  "license": "ISC"
+}
