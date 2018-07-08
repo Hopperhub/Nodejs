@@ -33,6 +33,15 @@ server.get('/aaa', (req, res) => {
 server.use(express.static('../nodejs_use/node1/www/')); // static: 会自动压缩文件 -> 中间件 
 
 /* 
+1. 基本结构
+2. 中间件
+3. 数据
+4. cookie、seesion
+5. 路由
+6. 服务端渲染
+*/
+
+/* 
 1.中间件 
     express 的功能都是通过中间件来实现的
     引用中间件：server.use()  
@@ -73,4 +82,20 @@ req.files
     - server.use(express.static()) // 自动发送，客户端要什么服务端给什么，不能控制
 - res.sendStatus(code)  状态码
 - res.redirect(url)     重定向
+*/
+
+/* 
+渲染（服务端/客户端）：让东西能看见
+1. 服务端渲染：给到浏览器的就是最终结果。ejs、pug、react
+缺点：体积大
+优点：稳定、数据不暴露（防抓取、SEO）
+2. 客户端渲染：组装。angular、vue、react
+优点：体积小
+缺点：不够稳定、数据暴露
+
+编译（服务端/客户端）：把一种语言变成另一种
+1. 服务端编译：babel、webpack
+2. 客户端编译：babel.js、browser.js
+
+打包: 把一堆东西包在一起 -> vue
 */
