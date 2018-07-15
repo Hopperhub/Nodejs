@@ -86,3 +86,11 @@ httpServer.listen(8080);
 - KOA 1.x 基于 generator/yield
 - KOA 2.x 过渡 yield/await
 - KOA 3.x 基于 async/await
+
+## node 中间层
+
+1.  统一调度
+
+2.  缓存
+
+3.  检测
