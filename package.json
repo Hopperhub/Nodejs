@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/Hopperhub/Nodejs#readme",
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "mysql": "^2.15.0"
+    "eslint": "^5.16.0",
+    "mysql": "^2.17.1"
   }
 }
