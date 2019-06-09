@@ -24,7 +24,7 @@ const dbConnection = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '123456',
-    database: '20180616'
+    database: 'test'
 });
 
 // 连接
