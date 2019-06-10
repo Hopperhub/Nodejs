@@ -18,31 +18,38 @@ dbConnection.connect((err, data) => {
     }
 }); */
 
-// 使用连接池的方式，避免多个请求造成的等待
-const dbConnection = mysql.createPool({
-    connectionLimit: 10, // 连接限制，默认值为 10 
+// 使用连接池的方式，避免多个请求造成的拥塞
+const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '123456',
-    database: 'test'
+    database: 'test',
+    connectionLimit: 10, // 连接限制，默认值为 10 
 });
 
 // 连接
-dbConnection.getConnection((err, connection) => {
+// dbConnection.getConnection((err, connection) => {
+//     if (err) {
+//         console.log('连接失败', err);
+//     } else {
+//         console.log('连接成功');
+//         // 执行数据库语句
+//         connection.query('SELECT username FROM user_table WHERE ID=1', (err, data) => {
+//             if (err) {
+//                 console.log(err);
+//             } else {
+//                 console.log(JSON.stringify(data));
+//             }
+//         });
+//     }
+// });
+pool.query('SELECT username FROM user_table WHERE ID=1', (err, data) => {
     if (err) {
-        console.log('连接失败', err);
+        console.log('查询失败', err);
     } else {
-        console.log('连接成功');
-        // 执行数据库语句
-        connection.query('SELECT username FROM user_table WHERE ID=1', (err, data) => {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log(JSON.stringify(data));
-            }
-        });
+        console.log(JSON.stringify(data));
     }
-});
+})
 
 const server = http.createServer((req, res) => {});
 
