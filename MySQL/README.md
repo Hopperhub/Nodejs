@@ -82,3 +82,7 @@
         SELECT 字段列表 FROM 表 WHERE 条件
         -> SELECT username,online FROM user_table WHERE ID=1
     ```
+
+## 参考
+
+- [菜鸟教程](https://www.runoob.com/mysql/mysql-tutorial.html)
