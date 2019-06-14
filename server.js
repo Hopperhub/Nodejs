@@ -15,10 +15,37 @@ const pool = mysql.createPool({
 
 // 服务器
 const app = http.createServer((req, res) => {
-    let {pathname, query} = url.parse(req.url, true);
+    const {pathname, query} = url.parse(req.url, true);
+    const {username, password} = query
     switch (pathname) {
         case '/reg': // 注册
-            console.log(query);
+            // 数据校验
+            if (!/^\w{6,32}$/.test(username)) {
+                res.write(JSON.stringify({code: 1, msg: '用户名不符合规范'}));
+                res.end();
+            } else if (!/^.{6,32}$/.test(password)) {
+                res.write(JSON.stringify({code: 1, msg: '密码不符合规范'}));
+                res.end();
+            } else {
+                pool.query(`SELECT * FROM user_table WHERE username='${username}'`, (err, data) => {
+                    if (err) {
+                        res.write(JSON.stringify({code: 1, msg: '数据库错误'}));
+                        res.end();
+                    } else if (data.length > 0) {
+                        res.write(JSON.stringify({code:1, msg: '用户名已存在'}));
+                        res.end();
+                    } else {
+                        pool.query(`INSERT INTO user_table (username, password, online) VALUES ('${username}', '${password}', 0)`, err => {
+                            if (err) {
+                                res.write(JSON.stringify({code: 1, msg: '数据库错误'}));
+                            } else {
+                                res.write(JSON.stringify({code:0, msg: '注册成功'}));
+                            }
+                            res.end();
+                        })
+                    }
+                });
+            }
             break;
         case '/login': // 登录
             console.log(query);
