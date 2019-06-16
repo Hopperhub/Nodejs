@@ -16,7 +16,7 @@
                         username: $('#username').val(),
                         password: $('#password').val(),
                     },
-                    success: (res) => {
+                    success: res => {
                         if (res.code) {
                             alert(`注册失败，${res.msg}`);
                         } else {
@@ -27,13 +27,35 @@
                         alert('连接失败，请检查网络');
                     }
                 })
-            })
-        })
+            });
+
+            $('#login').click(() => {
+                $.ajax({
+                    url: '/login',
+                    dataType: 'json',
+                    data: {
+                        username: $('#username').val(),
+                        password: $('#password').val(),
+                    },
+                    success: res => {
+                        if (res.code) {
+                            alert(`登录失败，${res.msg}`);
+                        } else {
+                            alert('登录成功');
+                        }
+                    },
+                    error: () => {
+                        alert('连接失败，请检查网络');
+                    }
+                });
+            });
+        });
     </script>
 </head>
 <body>
     用户名：<input id="username" type="text"/>
     密&nbsp;&nbsp;码：<input id="password" type="text"/>
     <input type="button" value="注册" id="reg">
+    <input type="button" value="登录" id="login">
 </body>
 </html>

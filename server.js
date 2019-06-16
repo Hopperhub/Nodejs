@@ -5,6 +5,8 @@ const url = require('url');
 const mysql = require('mysql');
 const io = require('socket.io');
 
+const regs = require('./libs/regs.js');
+
 // 数据库
 const pool = mysql.createPool({
     host: 'localhost',
@@ -16,18 +18,18 @@ const pool = mysql.createPool({
 // 服务器
 const app = http.createServer((req, res) => {
     const {pathname, query} = url.parse(req.url, true);
-    const {username, password} = query
+    const {username, password} = query;
     switch (pathname) {
         case '/reg': // 注册
             // 数据校验
-            if (!/^\w{6,32}$/.test(username)) {
+            if (!regs.username.test(username)) {
                 res.write(JSON.stringify({code: 1, msg: '用户名不符合规范'}));
                 res.end();
-            } else if (!/^.{6,32}$/.test(password)) {
+            } else if (!regs.password.test(password)) {
                 res.write(JSON.stringify({code: 1, msg: '密码不符合规范'}));
                 res.end();
             } else {
-                pool.query(`SELECT * FROM user_table WHERE username='${username}'`, (err, data) => {
+                pool.query(`SELECT ID FROM user_table WHERE username='${username}'`, (err, data) => {
                     if (err) {
                         res.write(JSON.stringify({code: 1, msg: '数据库错误'}));
                         res.end();
@@ -48,10 +50,39 @@ const app = http.createServer((req, res) => {
             }
             break;
         case '/login': // 登录
-            console.log(query);
+            if (!regs.username.test(username)) {
+                res.write(JSON.stringify({code: 1, msg: '用户名不符合规范'}));
+                res.end();
+            } else if (!regs.password.test(password)) {
+                res.write(JSON.stringify({code: 1, msg: '密码不符合规范'}));
+                res.end();
+            } else {
+                pool.query(`SELECT ID, password FROM user_table WHERE username='${username}'`, (err, data) => {
+                    if (err) {
+                        res.write(JSON.stringify({code: 1, msg: '数据库错误'}));
+                        res.end();
+                    } else if (data.length === 0) {
+                        res.write(JSON.stringify({code: 1, msg: '用户不存在，请注册！'}));
+                        res.end();
+                    } else if (data[0].password !== password) {
+                        res.write(JSON.stringify({code: 1, msg: '用户名或密码不正确'}));
+                        res.end();
+                    } else {
+                        pool.query(`UPDATE user_table SET online=1 WHERE ID=${data[0].ID}`, err => {
+                            if (err) {
+                                res.write(JSON.stringify({code: 1, msg: '数据库错误'}));
+                                res.end();
+                            } else {
+                                res.write(JSON.stringify({code: 0, msg: '登录成功'}));
+                                res.end();
+                            }
+                        });
+                    }
+                });
+            }
             break;
         default: // 请求资源文件
-            fs.readFile(`www${req.url}`, (err, data) => {
+            fs.readFile(`www${pathname}`, (err, data) => {
                 if (err) {
                     res.writeHead(404);
                     res.write('Not Found');
@@ -65,10 +96,25 @@ const app = http.createServer((req, res) => {
 });
 app.listen(3000);
 
+// websocket
+const ws = io.listen(app);
+ws.on('connection', sock => {
+   sock.on('reg', (username, password) => {
+       // 注册
+   });
+   sock.on();
+});
+
 
 /**
  * 接口：
  * 用户注册： /reg?username=xxx&password=xxx
  * 用户登录： /login?username=xxx&password=xxx
  * 返回：{code: 0, msg: '信息'}；code 的值为 0 时，表示成功，反之则表示失败
+ */
+
+/**
+ * ws 接口
+ * 客户端发送：'reg', username, password => 服务端返回： 'reg_ret', code, msg
+ * 'login', username, password => 'login_ret', code, msg
  */
