@@ -109,7 +109,7 @@ ws.on('connection', sock => {
                if (err) {
                    sock.emit('reg_ret', 1, '数据库错误');
                } else if (data.length > 0) {
-                   sock.emit('reg_ret', 1, '数据库错误');
+                   sock.emit('reg_ret', 1, '用户名已存在');
                } else {
                    pool.query(`INSERT INTO user_table (username, password, online) VALUES ('${username}', '${password}', 0)`, err => {
                        if (err) {
