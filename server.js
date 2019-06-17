@@ -100,9 +100,31 @@ app.listen(3000);
 const ws = io.listen(app);
 ws.on('connection', sock => {
    sock.on('reg', (username, password) => {
-       // 注册
+       if (!regs.username.test(username)) {
+           sock.emit('reg_ret', 1, '用户名不符合规范');
+       } else if (!regs.password.test(password)) {
+           sock.emit('reg_ret', 1, '密码不符合规范');
+       } else {
+           pool.query(`SELECT ID FROM user_table WHERE username='${username}'`, (err, data) => {
+               if (err) {
+                   sock.emit('reg_ret', 1, '数据库错误');
+               } else if (data.length > 0) {
+                   sock.emit('reg_ret', 1, '数据库错误');
+               } else {
+                   pool.query(`INSERT INTO user_table (username, password, online) VALUES ('${username}', '${password}', 0)`, err => {
+                       if (err) {
+                           sock.emit('reg_ret', 1, '数据库错误');
+                       } else {
+                           sock.emit('reg_ret', 0, '注册成功');
+                       }
+                   })
+               }
+           })
+       }
    });
-   sock.on();
+   sock.on('login', (username, password) => {
+       // 登录
+   });
 });
 
 

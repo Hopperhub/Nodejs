@@ -3,8 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>通信</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script>
+        $(() => {
+            const sock = io.connect('ws://localhost:3000');
+
+            sock.on('reg_ret', (code, msg) => {
+                if (code) {
+                    alert(`注册失败，${msg}`);
+                } else {
+                    alert('注册成功');
+                }
+            });
+
+            $('#reg').click(() => {
+                sock.emit('reg', $('#username').val(), $('#password').val());
+            });
+        });
+    </script>
 </head>
 <body>
-
+    用户名：<input type="text" id="username">
+    密码：<input type="password" id="password">
+    <input type="button" value="注册" id="reg">
 </body>
 </html>
