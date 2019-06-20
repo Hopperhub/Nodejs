@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>通信</title>
+    <style>
+    .mine {
+        background: yellowgreen;
+    }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script>
@@ -16,9 +21,45 @@
                     alert('注册成功');
                 }
             });
+            sock.on('login_ret', (code, msg)=> {
+                if (code) {
+                    alert(`登录失败，${msg}`);
+                } else {
+                    alert('登录成功');
+                }
+            });
+            sock.on('msg_ret', (code, msg, myName, txt) => {
+                if (code) {
+                    alert(`发送失败，${msg}`);
+                } else {
+                    const Li = $(`
+                        <li class="mine">
+                            <h4>${myName}</h4>
+                            <p>${txt}</p>    
+                        </li>
+                    `);
+                    $('.chat-box').append(Li);
+                }
+            });
+            sock.on('msg', (user, txt) => {
+                const Li = $(`
+                    <li>
+                        <h4>${user}</h4>    
+                        <p>${txt}</p>
+                    </li>
+                `);
+                $('.chat-box').append(Li);
+            });
 
             $('#reg').click(() => {
                 sock.emit('reg', $('#username').val(), $('#password').val());
+            });
+            $('#login').click(() => {
+                sock.emit('login', $('#username').val(), $('#password').val());
+            });
+            $('.send').click(() => {
+                sock.emit('msg', $('#chat-input').val().trim());
+                $('#chat-input').val();
             });
         });
     </script>
@@ -27,5 +68,10 @@
     用户名：<input type="text" id="username">
     密码：<input type="password" id="password">
     <input type="button" value="注册" id="reg">
+    <input type="button" value="登录" id="login">
+    <hr>
+    <textarea id="chat-input" cols="30" rows="6"></textarea>
+    <input type="button" value="发送" class="send">
+    <ul class="chat-box"></ul>
 </body>
 </html>
