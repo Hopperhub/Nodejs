@@ -94,3 +94,18 @@ httpServer.listen(8080);
 2.  缓存
 
 3.  检测
+
+## [http2](https://tools.ietf.org/html/rfc7540)
+
+- 特性
+
+    - 强制 https
+    - 性能高: 面向流，头压缩，多路复用
+    - 双向通信：服务器推送
+
+## ajax
+- 1.0   xhr.send('字符串')
+- 2.0
+    - xhr.send(formData)
+    - xhr.send(Blob)
+    - xhr.send(Buffer)

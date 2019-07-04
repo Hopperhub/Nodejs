@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Form Data</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+      // formData 上传图片: https://harttle.land/2016/07/04/jquery-file-upload.html
+      // 上传进度：https://www.jianshu.com/p/061ce2b5ed44
+      $(() => {
+        $("#submit").click(() => {
+          var formData = new FormData();
+          formData.append("upfile", $("#file").prop("files")[0]);
+          console.log($("#file").prop("files")[0]);
+          $.ajax({
+            url: "http://test.yidoutang.com/guide/UeditorUpload",
+            method: "POST",
+            xhrFields: {
+              withCredentials: true
+            },
+            crossDomain: true,
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: () => {
+              console.log("开始上传");
+            },
+            xhr: () => {
+              var _xhr = $.ajaxSettings.xhr();
+              if (_xhr.upload) {
+                _xhr.upload.addEventListener(
+                  "progress",
+                  e => {
+                    console.log("上传中", e);
+                  },
+                  false
+                );
+              }
+              return _xhr;
+            },
+            success: res => {
+              console.log(res);
+            }
+          });
+        });
+
+        $('#cors').click(() => {
+          $.ajax({
+            url: 'http://localhost:3001',
+            success: () => {
+              console.log(123);
+            }
+          })
+        })
+
+        // jsonp
+        $('#search').on('input', (evt) => {
+          const src = `https://www.baidu.com/sugrec?prod=pc&wd=${evt.currentTarget.value}&cb=show`;
+          const $script = $(`<script src="${src}" class="jsonp-script"><\/script>`); // 主义转义符号，因为在 script 标签内定义的 js 逻辑
+          $('head').append($script);
+        });
+        $('#search2').on('input', (evt) => {
+          $.ajax({
+            url: `https://www.baidu.com/sugrec`,
+            data: {
+              prod: 'pc',
+              wd: evt.currentTarget.value
+            },
+            dataType: 'jsonp', // 定义请求的类型为 jsonp
+            jsonp: 'cb', // 回调的函数名
+            success(res) {
+              show(res);
+            },
+            error() {
+              console.log('error');
+            }
+          });
+        });
+        $('#jsonp').on('click', () => {
+          $.ajax({
+            url: 'http://localhost:3001/jsonp',
+            data: {
+              a: 12,
+              b: 34,
+            },
+            dataType: 'jsonp',
+            jsonp: 'cb',
+            success: res => {
+              console.log(res);
+            },
+            error: () => {
+              console.log('error');
+            }
+          });
+        });
+      });
+      // jsonp 的函数
+      function show(res) {
+        if (!res.g) {
+          $('.search-result').empty();
+          return false;
+        }
+        const resList = res.g.map(item => `<li>${item.q}</li>`).join('');
+        $('.search-result').html($(resList));
+        $('.jsonp-script').remove();
+      }
+    </script>
+  </head>
+  <body>
+    <input type="file" id="file" />
+    <input type="button" value="文件提交" id="submit" />
+    <input type="button" value="跨域请求" id="cors">
+    <input type="button" value="jsonp" id="jsonp">
+    <input type="text" id="search" placeholder="搜索">
+    <input type="text" id="search2" placeholder="搜索2">
+    <ul class="search-result"></ul>
+  </body>
+</html>

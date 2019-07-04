@@ -17,6 +17,7 @@ const pool = mysql.createPool({
 
 // 服务器
 const app = http.createServer((req, res) => {
+    console.log(req.headers);
     const {pathname, query} = url.parse(req.url, true);
     const {username, password} = query;
     switch (pathname) {
