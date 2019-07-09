@@ -93,6 +93,19 @@
             }
           });
         });
+
+        // 定位
+        $('#geo').click(() => {
+          if (window.navigator.geolocation) {
+            window.navigator.geolocation.getCurrentPosition(res => {
+              console.log(JSON.stringify(res));
+            }, error => {
+              console.log('失败', error);
+            }, {});
+          } else {
+            alert('您的浏览器不支持定位！');
+          }
+        })
       });
       // jsonp 的函数
       function show(res) {
@@ -114,5 +127,6 @@
     <input type="text" id="search" placeholder="搜索">
     <input type="text" id="search2" placeholder="搜索2">
     <ul class="search-result"></ul>
+    <input type="button" value="获取定位" id="geo">
   </body>
 </html>
