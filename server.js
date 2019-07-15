@@ -101,8 +101,6 @@ app.listen(3000);
 const ws = io.listen(app);
 let sockArr = []; // 存通信的 sock ，用于广播
 ws.on('connection', sock => {
-    sockArr.push(sock);
-
     let curUser = '';
     let curUserId = '';
 
@@ -150,6 +148,7 @@ ws.on('connection', sock => {
                             sock.emit('login_ret', 0, '登录成功');
                             curUser = username;
                             curUserId = data[0].ID;
+                            sockArr.push(sock);
                         }
                     })
                 }
