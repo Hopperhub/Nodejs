@@ -96,12 +96,27 @@
 
         // 定位
         $('#geo').click(() => {
-          if (window.navigator.geolocation) {
-            window.navigator.geolocation.getCurrentPosition(res => {
-              console.log(JSON.stringify(res));
+          const geo = window.navigator.geolocation
+          let watchId
+          if (geo) {
+            // https://developer.mozilla.org/zh-CN/docs/Web/API/Geolocation/getCurrentPosition
+            geo.getCurrentPosition(res => {
+              console.log(res);
             }, error => {
               console.log('失败', error);
-            }, {});
+            }, {
+              enableHighAccuracy: true, // 高精度模式
+              timeout: 3000, // 超时
+              maximumAge: 5000, // 缓存时间
+            });
+
+            watchId = geo.watchPosition(res => {
+              console.log(res);
+            }, error => {
+              console.log('失败', error);
+            }, {
+              frequency: 1000
+            });
           } else {
             alert('您的浏览器不支持定位！');
           }
