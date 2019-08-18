@@ -3,8 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <title>Form Data</title>
+    <style>
+      .box {
+        width: 500px;
+        height: 20px;
+        background: #eee;
+      }
+      .box .child {
+        width: 0;
+        height: 100%;
+        background: green;
+      }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
+      // jsonp 的函数
+      function show(res) {
+        if (!res.g) {
+          $(".search-result").empty();
+          return false;
+        }
+        const resList = res.g.map(item => `<li>${item.q}</li>`).join("");
+        $(".search-result").html($(resList));
+        $(".jsonp-script").remove();
+      }
+
       // formData 上传图片: https://harttle.land/2016/07/04/jquery-file-upload.html
       // 上传进度：https://www.jianshu.com/p/061ce2b5ed44
       $(() => {
@@ -44,104 +67,192 @@
           });
         });
 
-        $('#cors').click(() => {
+        $("#cors").click(() => {
           $.ajax({
-            url: 'http://localhost:3001',
+            url: "http://localhost:3001",
             success: () => {
               console.log(123);
             }
-          })
-        })
+          });
+        });
 
         // jsonp
-        $('#search').on('input', (evt) => {
-          const src = `https://www.baidu.com/sugrec?prod=pc&wd=${evt.currentTarget.value}&cb=show`;
-          const $script = $(`<script src="${src}" class="jsonp-script"><\/script>`); // 主义转义符号，因为在 script 标签内定义的 js 逻辑
-          $('head').append($script);
+        $("#search").on("input", evt => {
+          const src = `https://www.baidu.com/sugrec?prod=pc&wd=${
+            evt.currentTarget.value
+          }&cb=show`;
+          const $script = $(
+            `<script src="${src}" class="jsonp-script"><\/script>`
+          ); // 主义转义符号，因为在 script 标签内定义的 js 逻辑
+          $("head").append($script);
         });
-        $('#search2').on('input', (evt) => {
+        $("#search2").on("input", evt => {
           $.ajax({
             url: `https://www.baidu.com/sugrec`,
             data: {
-              prod: 'pc',
+              prod: "pc",
               wd: evt.currentTarget.value
             },
-            dataType: 'jsonp', // 定义请求的类型为 jsonp
-            jsonp: 'cb', // 回调的函数名
+            dataType: "jsonp", // 定义请求的类型为 jsonp
+            jsonp: "cb", // 回调的函数名
             success(res) {
               show(res);
             },
             error() {
-              console.log('error');
+              console.log("error");
             }
           });
         });
-        $('#jsonp').on('click', () => {
+        $("#jsonp").on("click", () => {
           $.ajax({
-            url: 'http://localhost:3001/jsonp',
+            url: "http://localhost:3001/jsonp",
             data: {
               a: 12,
-              b: 34,
+              b: 34
             },
-            dataType: 'jsonp',
-            jsonp: 'cb',
+            dataType: "jsonp",
+            jsonp: "cb",
             success: res => {
               console.log(res);
             },
             error: () => {
-              console.log('error');
+              console.log("error");
             }
           });
         });
 
         // 定位
-        $('#geo').click(() => {
-          const geo = window.navigator.geolocation
-          let watchId
+        $("#geo").click(() => {
+          const geo = window.navigator.geolocation;
+          let watchId;
           if (geo) {
             // https://developer.mozilla.org/zh-CN/docs/Web/API/Geolocation/getCurrentPosition
-            geo.getCurrentPosition(res => {
-              console.log(res);
-            }, error => {
-              console.log('失败', error);
-            }, {
-              enableHighAccuracy: true, // 高精度模式
-              timeout: 3000, // 超时
-              maximumAge: 5000, // 缓存时间
-            });
+            geo.getCurrentPosition(
+              res => {
+                alert(JSON.stringify(res));
+                console.log(res);
+              },
+              error => {
+                alert(JSON.stringify(error));
+                console.log("失败", error);
+              },
+              {
+                enableHighAccuracy: true, // 高精度模式
+                timeout: 3000, // 超时
+                maximumAge: 5000 // 缓存时间
+              }
+            );
 
-            watchId = geo.watchPosition(res => {
-              console.log(res);
-            }, error => {
-              console.log('失败', error);
-            }, {
-              frequency: 1000
-            });
+            watchId = geo.watchPosition(
+              res => {
+                alert(JSON.stringify(res));
+                console.log(res);
+              },
+              error => {
+                alert(JSON.stringify(error));
+                console.log("失败", error);
+              },
+              {
+                frequency: 1000
+              }
+            );
           } else {
-            alert('您的浏览器不支持定位！');
+            alert("您的浏览器不支持定位！");
+          }
+        });
+
+        // ======
+        const video = $('#vd')[0];
+        const $child = $('.child');
+        $('#play').on('click', () => {
+          video.play();
+        });
+        $('#pause').on('click', () => {
+          video.pause();
+        });
+        $('#stop').on('click', () => {
+          video.pause();
+          video.currentTime = 0; // 当前播放的时间
+        });
+        $('#muted').on('click', () => {
+          video.muted = !video.muted;
+        });
+        video.addEventListener('timeupdate', evt => { // 进度条
+          const width = `${(video.currentTime / video.duration) * 100}%`;
+          $child.css('width', width);
+        }, false);
+
+        // ======
+        // video 全屏：https://blog.csdn.net/lunhui1994_/article/details/79924884
+        // 使用第三方插件的案例
+        const FullScreen = () => {
+          // const ele = document.documentElement;
+          const ele = $('#vd')[0];
+          if (ele.requestFullScreen) {
+            ele.requestFullscreen();
+          } else if (ele.mozRequestFullScreen) {
+            ele.mozRequestFullScreen();
+          } else if (ele.webkitRequestFullScreen) {
+            ele.webkitRequestFullScreen()
+          } else {
+            alert('您的浏览器不支持视频全屏功能！')
+          }
+        }
+        const exitFullScreen = () => {
+          const de = document;
+          if (de.exitFullScreen) {
+            de.exitFullScreen();
+          } else if (de.mozCancelFullScreen) {
+            de.mozCancelFullSreen();
+          } else if (de.webkitCancelFullScreen) {
+            de.webkitCancelFullScreen();
+          } else {
+            alert('您的浏览器不支持视频全屏功能！');
+          }
+        }
+        let enterFullScreen = false
+        $('#fullScreen').on('click', () => {
+          if (enterFullScreen) {
+            exitFullScreen();
+            enterFullScreen = false;
+          } else {
+            FullScreen();
+            enterFullScreen = true;
           }
         })
       });
-      // jsonp 的函数
-      function show(res) {
-        if (!res.g) {
-          $('.search-result').empty();
-          return false;
-        }
-        const resList = res.g.map(item => `<li>${item.q}</li>`).join('');
-        $('.search-result').html($(resList));
-        $('.jsonp-script').remove();
-      }
     </script>
   </head>
   <body>
     <input type="file" id="file" />
     <input type="button" value="文件提交" id="submit" />
-    <input type="button" value="跨域请求" id="cors">
-    <input type="button" value="jsonp" id="jsonp">
-    <input type="text" id="search" placeholder="搜索">
-    <input type="text" id="search2" placeholder="搜索2">
+    <input type="button" value="跨域请求" id="cors" />
+    <input type="button" value="jsonp" id="jsonp" />
+    <input type="text" id="search" placeholder="搜索" />
+    <input type="text" id="search2" placeholder="搜索2" />
     <ul class="search-result"></ul>
-    <input type="button" value="获取定位" id="geo">
+    <input type="button" value="获取定位" id="geo" />
+    <hr>
+    <div>
+      <div class="box">
+        <div class="child"></div>
+      </div>
+      <!-- http://www.w3school.com.cn/html5/html_5_video.asp -->
+      视频播放：
+      <input type="button" value="播放" id="play">
+      <input type="button" value="暂停" id="pause">
+      <input type="button" value="停止" id="stop">
+      <input type="button" value="静音" id="muted">
+      <input type="button" value="全屏" id="fullScreen">
+      <video
+        loop
+        autoplay
+        controls
+        id="vd"
+        poster="./assets/fengjing.jpg"
+        src="./assets/xuwei.mp4">
+        您的浏览器不支持 video 标签
+      </video>
+    </div>
   </body>
 </html>
