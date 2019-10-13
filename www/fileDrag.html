@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>文件拖拽</title>
+    <style>
+        .container {
+            width: 500px;
+            height: 300px;
+            background: #ccc;
+            margin: 50px auto 0;
+            text-align: center;
+            line-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">将文件拖拽至此区域！</div>
+    <script>
+        const container = document.querySelector('.container');
+        container.addEventListener('dragenter', function () { // 进入区域
+            this.innerHTML = '释放鼠标';
+        }, false);
+        container.addEventListener('dragleave', function () { // 离开区域
+            this.innerHTML = '将文件拖拽至此区域！';
+        }, false);
+        container.addEventListener('dragover', ev => { // 悬停
+            console.log(123);
+            ev.preventDefault(); // over 阻止默认事件后，drop 才会被触发
+        }, false);
+        container.addEventListener('drop', ev => { // 放下
+            console.log(ev.dataTransfer.files);
+            ev.preventDefault(); // 阻止默认事件，避免浏览器直接打开拖拽的文件
+        }, false);
+    </script>
+</body>
+</html>
