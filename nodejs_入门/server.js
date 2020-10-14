@@ -28,4 +28,6 @@ process.on('SIGTERM', () => {
 });
 
 console.log('服务器已就绪');
-console.log(process.pid);
+
+const args = require('minimist')(process.argv.slice(2));
+console.log('running 参数:', args);
