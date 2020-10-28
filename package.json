@@ -24,6 +24,7 @@
     "mysql": "^2.17.1"
   },
   "dependencies": {
+    "cowsay": "^1.4.0",
     "minimist": "^1.2.5",
     "socket.io": "^2.2.0"
   }
