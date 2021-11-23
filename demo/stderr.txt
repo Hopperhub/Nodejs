@@ -1,0 +1,6 @@
+warnnig
+Trace: 错误信息
+    at Server.http.createServer (/Users/user/Documents/hopper/nodejs-learn/worker.js:16:12)
+    at Server.emit (events.js:198:13)
+    at parserOnIncoming (_http_server.js:695:12)
+    at HTTPParser.parserOnHeadersComplete (_http_common.js:111:17)

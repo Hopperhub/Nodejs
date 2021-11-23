@@ -1,0 +1,3 @@
+/log
+{ name: 'hopper', age: 26, hobby: { sport: [ 'basketball' ] } }
+计时器: 5.792ms
