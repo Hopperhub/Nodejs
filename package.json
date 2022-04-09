@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "cowsay": "^1.4.0",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "socket.io": "^2.2.0"
   }
 }
